@@ -1,0 +1,4 @@
+# dsh-watchdog bundle layer（宿主插件）。
+- insert:
+    - id: dsh-watchdog
+      name: '@deepseek-ai/dsh-watchdog'

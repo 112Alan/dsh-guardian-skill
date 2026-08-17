@@ -1,0 +1,25 @@
+{
+  "name": "@deepseek-ai/dsh-rollback",
+  "description": "对话崩溃自动回退（分支式）：回合致命报错且无任何输出时，自动在「发送前」位置派生干净会话并打开，避免对话停留在坏状态。",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "license": "MIT"
+}

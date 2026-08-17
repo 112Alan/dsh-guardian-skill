@@ -1,0 +1,6 @@
+# dsh-rollback bundle layer。
+# 宿主行由 profile 的 dsh.profile.bundles 自动组合；客户端半部分经 package.json
+# 的 dsh.client 声明由 client-modules 扫描加载（无需在此声明）。
+- insert:
+    - id: dsh-rollback
+      name: '@deepseek-ai/dsh-rollback'

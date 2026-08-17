@@ -1,0 +1,33 @@
+				// [dsh-mod] 图片：立即进消息（UI秒显），分析后台执行（不阻塞发送）
+				if (content.some((part) => part && part.type === "image")) {
+					const nodeFs = await import("node:fs");
+					const newContent = [];
+					for (const part of content) {
+						if (part && part.type === "image" && typeof part.data === "string") {
+							const safe = String(part.name || "img-" + Date.now()).replace(/[^\w.\-]/g, "_").slice(0, 50);
+							const p = "D:/16021/dsh-uploads/up-" + Date.now() + "-" + safe + ".b64";
+							const mime = part.mediaType || "image/jpeg";
+							const b64 = part.data;
+							// 立即写 .b64 文件（供后台分析/后续使用）
+							try { nodeFs.writeFileSync(p, b64); } catch (e2) {}
+							newContent.push(part);
+							// 后台分析：不阻塞发送，完成后写 analysis-latest.json
+							(async () => {
+								try {
+									const resp = await fetch("http://127.0.0.1:8083/v1/chat/completions", {
+										method: "POST",
+										headers: { "Content-Type": "application/json", "Authorization": "Bearer sk-gemini-test-123" },
+										body: JSON.stringify({ model: "gemini-3.6-flash", messages: [{ role: "user", content: [{ type: "text", text: "请用3-5句话简洁描述这张图片的内容和可见文字" }, { type: "image_url", image_url: { url: "data:" + mime + ";base64," + b64 } }] }] }),
+										signal: AbortSignal.timeout(90000),
+									});
+									const j = await resp.json();
+									const analysis = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+									const meta = JSON.stringify({ image: p, analysis: analysis, mime: mime });
+									await nodeFs.writeFile("D:/16021/dsh-uploads/analysis-latest.json", meta, "utf8");
+								} catch (e3) {}
+							})();
+						} else newContent.push(part);
+					}
+					content = newContent;
+					hasImage = false;
+				}

@@ -1,0 +1,29 @@
+{
+  "name": "@deepseek-ai/dsh-watchdog",
+  "description": "看门狗宿主插件：DSH 设置页「看门狗」卡片（enabled / intervalSeconds / watchVisionProxy）+ 启动时自动拉起看门狗 + /dsh-stop 意向停止指令。",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "dependencies": {
+    "@deepseek-ai/dsh-settings": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "3.18.1"
+  },
+  "license": "MIT"
+}
